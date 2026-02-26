@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DevOps Showcase</title>
+  <meta name="description" content="Docker + Terraform + GitHub Actions OIDC + AWS (ECR/App Runner) — minimal delivery demo." />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <header class="container">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">DS</div>
+      <div>
+        <h1>DevOps Showcase</h1>
+        <p class="subtitle">Spring Boot API + Nginx frontend • Terraform • CI/CD (OIDC) • AWS App Runner</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Live checks</h2>
+          <p class="muted">Call the backend through Nginx reverse proxy.</p>
+        </div>
+        <div class="pill" id="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">idle</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="btn-health">
+          <span class="btn-icon">↯</span>
+          GET /health
+        </button>
+
+        <button class="btn" id="btn-items">
+          <span class="btn-icon">≡</span>
+          GET /api/items
+        </button>
+
+        <button class="btn ghost" id="btn-clear">
+          <span class="btn-icon">⌫</span>
+          Clear
+        </button>
+      </div>
+
+      <div class="grid">
+        <div class="panel">
+          <div class="panel-title">Response</div>
+          <pre class="code" id="out">{}</pre>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">What this repo proves</div>
+          <ul class="list">
+            <li><span class="tag">Containers</span> Dockerfiles + Compose</li>
+            <li><span class="tag">IaC</span> Terraform (ECR + IAM + App Runner)</li>
+            <li><span class="tag">CI/CD</span> GitHub Actions → build/test → push → deploy</li>
+            <li><span class="tag">Security</span> OIDC auth, zero secrets in git</li>
+          </ul>
+
+          <div class="hint">
+            Tip: In local Compose, requests go to Nginx, which proxies to the <code>api</code> service.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span class="muted">© DevOps Showcase</span>
+      <span class="sep">•</span>
+      <span class="muted">Portfolio-grade delivery demo</span>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
