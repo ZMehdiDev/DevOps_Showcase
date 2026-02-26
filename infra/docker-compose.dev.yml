@@ -1,0 +1,20 @@
+services:
+  api:
+    build:
+      context: ../backend
+    ports:
+      - "${API_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health | grep -q ok"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  front:
+    build:
+      context: ../frontend
+    ports:
+      - "${FRONT_PORT:-8081}:80"
+    depends_on:
+      api:
+        condition: service_healthy
