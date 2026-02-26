@@ -1,0 +1,25 @@
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Java / Maven
+target/
+*.log
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# Terraform (future-proof)
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/crash.log
+**/.terraform.lock.hcl
+
+# Node (if ever)
+node_modules/
+dist/
