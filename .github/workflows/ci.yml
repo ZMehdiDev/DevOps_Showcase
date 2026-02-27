@@ -28,7 +28,9 @@ jobs:
 
       - name: Test (Spring)
         working-directory: backend
-        run: ./mvnw -q test
+        run: |
+          chmod +x mvnw
+          ./mvnw -q test
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
