@@ -9,3 +9,8 @@ variable "project_name" {
   description = "Prefix for resource names"
   default     = "devops-showcase"
 }
+
+variable "github_repo" {
+  type        = string
+  description = "GitHub repo in the form owner/repo"
+}
