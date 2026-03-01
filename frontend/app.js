@@ -1,6 +1,7 @@
 const out = document.getElementById("out");
 const statusText = document.getElementById("status-text");
 const statusDot = document.getElementById("status-dot");
+const API_BASE = "__API_BASE_URL__";
 
 function setStatus(kind, text) {
   statusText.textContent = text;
@@ -26,8 +27,7 @@ async function callJson(path) {
   out.textContent = "";
 
   try {
-    const res = await fetch(path, { headers: { "Accept": "application/json" } });
-
+    const res = await fetch(`${API_BASE}${path}`, { headers: { "Accept": "application/json" } });
     // Try JSON first, fallback to text
     const ct = res.headers.get("content-type") || "";
     const body = ct.includes("application/json") ? await res.json() : await res.text();

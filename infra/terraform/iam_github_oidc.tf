@@ -47,7 +47,10 @@ data "aws_iam_policy_document" "github_ecr_policy" {
       "ecr:PutImage",
       "ecr:UploadLayerPart"
     ]
-    resources = [aws_ecr_repository.api.arn]
+    resources = [
+      aws_ecr_repository.api.arn,
+      aws_ecr_repository.front.arn
+    ]
   }
 }
 

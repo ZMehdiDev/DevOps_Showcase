@@ -50,4 +50,18 @@ jobs:
           docker build -t $REGISTRY/${ECR_REPOSITORY}:latest -f backend/Dockerfile backend
           docker tag  $REGISTRY/${ECR_REPOSITORY}:latest $REGISTRY/${ECR_REPOSITORY}:$IMAGE_TAG_SHA
           docker push $REGISTRY/${ECR_REPOSITORY}:latest
-          docker push $REGISTRY/${ECR_REPOSITORY}:$IMAGE_TAG_SHA
+          docker push $REGISTRY/${ECR_REPOSITORY}:$
+          
+      - name: Build and push Docker image (FRONT)
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG_SHA: sha-${{ github.sha }}
+          API_URL: https://cpdk2jfrxx.eu-west-1.awsapprunner.com
+        run: |
+          docker build \
+            -t $REGISTRY/devops-showcase-front:latest \
+            -t $REGISTRY/devops-showcase-front:$IMAGE_TAG_SHA \
+            --build-arg API_BASE_URL=$API_URL \
+            -f frontend/Dockerfile frontend
+          docker push $REGISTRY/devops-showcase-front:latest
+          docker push $REGISTRY/devops-showcase-front:$IMAGE_TAG_SHA
