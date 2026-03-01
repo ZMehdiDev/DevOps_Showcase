@@ -1,5 +1,4 @@
-package main.java.com.zakdevops.showcase.config;
-
+package com.zakdevops.showcase.config;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
