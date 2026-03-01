@@ -10,7 +10,9 @@ permissions:
 
 env:
   AWS_REGION: eu-west-1
-  ECR_REPOSITORY: devops-showcase-api
+  ECR_API_REPOSITORY: devops-showcase-api
+  ECR_FRONT_REPOSITORY: devops-showcase-front
+  API_URL: https://cpdk2jfrxx.eu-west-1.awsapprunner.com
 
 jobs:
   build_test_push:
@@ -47,21 +49,36 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG_SHA: sha-${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/${ECR_REPOSITORY}:latest -f backend/Dockerfile backend
-          docker tag  $REGISTRY/${ECR_REPOSITORY}:latest $REGISTRY/${ECR_REPOSITORY}:$IMAGE_TAG_SHA
-          docker push $REGISTRY/${ECR_REPOSITORY}:latest
-          docker push $REGISTRY/${ECR_REPOSITORY}:$
-          
+          set -euo pipefail
+          IMAGE_LATEST="$REGISTRY/${ECR_API_REPOSITORY}:latest"
+          IMAGE_SHA="$REGISTRY/${ECR_API_REPOSITORY}:${IMAGE_TAG_SHA}"
+
+          echo "API IMAGE_LATEST=$IMAGE_LATEST"
+          echo "API IMAGE_SHA=$IMAGE_SHA"
+
+          docker build -t "$IMAGE_LATEST" -f backend/Dockerfile backend
+          docker tag  "$IMAGE_LATEST" "$IMAGE_SHA"
+          docker push "$IMAGE_LATEST"
+          docker push "$IMAGE_SHA"
+
       - name: Build and push Docker image (FRONT)
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG_SHA: sha-${{ github.sha }}
-          API_URL: https://cpdk2jfrxx.eu-west-1.awsapprunner.com
         run: |
+          set -euo pipefail
+          IMAGE_LATEST="$REGISTRY/${ECR_FRONT_REPOSITORY}:latest"
+          IMAGE_SHA="$REGISTRY/${ECR_FRONT_REPOSITORY}:${IMAGE_TAG_SHA}"
+
+          echo "FRONT IMAGE_LATEST=$IMAGE_LATEST"
+          echo "FRONT IMAGE_SHA=$IMAGE_SHA"
+          echo "API_URL=${API_URL}"
+
           docker build \
-            -t $REGISTRY/devops-showcase-front:latest \
-            -t $REGISTRY/devops-showcase-front:$IMAGE_TAG_SHA \
-            --build-arg API_BASE_URL=$API_URL \
+            -t "$IMAGE_LATEST" \
+            -t "$IMAGE_SHA" \
+            --build-arg API_BASE_URL="${API_URL}" \
             -f frontend/Dockerfile frontend
-          docker push $REGISTRY/devops-showcase-front:latest
-          docker push $REGISTRY/devops-showcase-front:$IMAGE_TAG_SHA
+
+          docker push "$IMAGE_LATEST"
+          docker push "$IMAGE_SHA"
