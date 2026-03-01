@@ -36,17 +36,22 @@ jobs:
           chmod +x mvnw
           ./mvnw -q test
 
+      # --- Deploy gate ---
+      # Set repo variable DEPLOY_ENABLED=true to enable AWS steps
       - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::696817466202:role/devops-showcase-github-actions
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push Docker image (API)
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG_SHA: sha-${{ github.sha }}
@@ -64,6 +69,7 @@ jobs:
           docker push "$IMAGE_SHA"
 
       - name: Build and push Docker image (FRONT)
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG_SHA: sha-${{ github.sha }}
@@ -86,6 +92,7 @@ jobs:
           docker push "$IMAGE_SHA"
 
       - name: Wait for App Runner API to be RUNNING
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: |
           set -euo pipefail
           ARN="${APPRUNNER_API_ARN}"
@@ -99,9 +106,11 @@ jobs:
           exit 1
 
       - name: Trigger App Runner deployment (API)
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: aws apprunner start-deployment --service-arn "${APPRUNNER_API_ARN}"
 
       - name: Wait for App Runner FRONT to be RUNNING
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: |
           set -euo pipefail
           ARN="${APPRUNNER_FRONT_ARN}"
@@ -115,4 +124,5 @@ jobs:
           exit 1
 
       - name: Trigger App Runner deployment (FRONT)
+        if: ${{ vars.DEPLOY_ENABLED == 'true' }}
         run: aws apprunner start-deployment --service-arn "${APPRUNNER_FRONT_ARN}"
