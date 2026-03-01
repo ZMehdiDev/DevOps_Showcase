@@ -39,6 +39,16 @@ data "aws_iam_policy_document" "github_ecr_policy" {
 
   statement {
     actions = [
+      "apprunner:StartDeployment"
+    ]
+    resources = [
+      aws_apprunner_service.api.arn,
+      aws_apprunner_service.front.arn
+    ]
+  }
+
+  statement {
+    actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:BatchGetImage",
       "ecr:CompleteLayerUpload",
@@ -53,6 +63,8 @@ data "aws_iam_policy_document" "github_ecr_policy" {
     ]
   }
 }
+
+
 
 resource "aws_iam_policy" "github_ecr" {
   name   = "${var.project_name}-github-ecr-push"

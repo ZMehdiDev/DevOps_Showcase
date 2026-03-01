@@ -82,3 +82,9 @@ jobs:
 
           docker push "$IMAGE_LATEST"
           docker push "$IMAGE_SHA"
+
+      - name: Trigger App Runner deployment (API)
+        run: aws apprunner start-deployment --service-arn arn:aws:apprunner:eu-west-1:696817466202:service/devops-showcase-api/66a02c2bb10447e5b0b86e63264feb46
+
+      - name: Trigger App Runner deployment (FRONT)
+        run: aws apprunner start-deployment --service-arn arn:aws:apprunner:eu-west-1:696817466202:service/devops-showcase-front/2875112bc9e04e158091ae3902c535e5
