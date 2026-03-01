@@ -39,7 +39,9 @@ data "aws_iam_policy_document" "github_ecr_policy" {
 
   statement {
     actions = [
-      "apprunner:StartDeployment"
+      "apprunner:DescribeService",
+      "apprunner:StartDeployment",
+      "apprunner:ListOperations"
     ]
     resources = [
       aws_apprunner_service.api.arn,
